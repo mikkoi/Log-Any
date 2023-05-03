@@ -25,6 +25,10 @@ for my $method ( Log::Any::Adapter::Util::logging_and_detection_methods() ) {
     no strict 'refs';
     *$method = sub {
         my $class = ref( $_[0] ) || $_[0];
+        die "$class does not implement $method"
+            . ";\nPOSSIBLE REASON: This is a structured logger"
+            . " and you have defined a filter."
+            if $class->can('structured');
         die "$class does not implement $method";
     };
 }
